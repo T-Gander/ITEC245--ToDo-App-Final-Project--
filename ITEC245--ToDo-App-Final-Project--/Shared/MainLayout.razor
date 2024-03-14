@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Authorization;
 
 <PageTitle>ITEC245--ToDo-App-Final-Project--</PageTitle>
 
@@ -14,6 +16,14 @@
 
         <article class="content px-4">
             @Body
+            
         </article>
     </main>
 </div>
+
+@code{
+    private void NavigateToLogin()
+    {
+        NavigationManager.NavigateTo("/Identity/Account/Login?");
+    }
+}
