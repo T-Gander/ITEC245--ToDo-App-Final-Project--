@@ -13,12 +13,12 @@
 
     private void NavigateToLogin()
     {
-        NavigationManager.NavigateTo("/Identity/Account/Login");
+        NavigationManager.NavigateTo("/Identity/Account/Login", true);
     }
 
     private void NavigateToRegister()
     {
-        NavigationManager.NavigateTo("/Identity/Account/Register?returnUrl=%2F");
+        NavigationManager.NavigateTo("/Identity/Account/Register", true);
     }
 }
 
