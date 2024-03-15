@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ITEC245__ToDo_App_Final_Project__.Models
 {
+    
     public class TaskReport
     {
         [Required]
@@ -14,4 +15,6 @@ namespace ITEC245__ToDo_App_Final_Project__.Models
 
         public Task Task { get; set; }
     }
+    
+    
 }
