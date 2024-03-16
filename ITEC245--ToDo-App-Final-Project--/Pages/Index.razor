@@ -15,6 +15,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         user = authState.User;
 
