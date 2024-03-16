@@ -3,22 +3,5 @@
 @inject NavigationManager NavigationManager;
 <PageTitle>Home</PageTitle>
 
-<h1 class="text-center">Please Login or Register below:</h1>
-
-<!-- Using buttons -->
-<button @onclick="NavigateToLogin">Login</button>
-<button @onclick="NavigateToRegister">Register</button>
-
-@code {
-
-    private void NavigateToLogin()
-    {
-        NavigationManager.NavigateTo("/Identity/Account/Login", true);
-    }
-
-    private void NavigateToRegister()
-    {
-        NavigationManager.NavigateTo("/Identity/Account/Register", true);
-    }
-}
+<h1>Hello, test, you're authorized!</h1>
 

@@ -1,6 +1,10 @@
 ﻿@inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
-@using Microsoft.AspNetCore.Authorization;
+@inject SignInManager<IdentityUser> SignInManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Mvc
 
 <PageTitle>ITEC245--ToDo-App-Final-Project--</PageTitle>
 
@@ -10,20 +14,41 @@
     </div>
 
     <main>
-        <div class="top-row px-4 auth">
-            <LoginDisplay />
-        </div>
-
         <article class="content px-4">
-            @Body
-            
+            <AuthorizeView>
+                <Authorized>
+                    @Body
+                    <button @onclick="LogOut">Logout</button>
+                    
+                </Authorized>
+                <NotAuthorized>
+                    <h1 class="text-center">Please Login or Register below:</h1>
+                    <div class="container" style="margin-top: 240px">
+                        <div class="row justify-content-around" style="height: 100px">
+                            <button class="col-md-5 btn btn-primary" @onclick="NavigateToLogin">Login</button>
+                            <button class="btn btn-secondary col-md-5 " @onclick="NavigateToRegister">Register</button>
+                        </div>
+                    </div>
+                </NotAuthorized>
+            </AuthorizeView>
         </article>
     </main>
 </div>
 
-@code{
+@code {
+
     private void NavigateToLogin()
     {
-        NavigationManager.NavigateTo("/Identity/Account/Login?");
+        NavigationManager.NavigateTo("/Identity/Account/Login", true);
+    }
+
+    private void NavigateToRegister()
+    {
+        NavigationManager.NavigateTo("/Identity/Account/Register", true);
+    }
+
+    private void LogOut()
+    {
+        NavigationManager.NavigateTo("/Logout", true);
     }
 }
