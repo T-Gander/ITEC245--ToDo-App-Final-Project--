@@ -4,7 +4,9 @@
 @inject NavigationManager NavigationManager;
 <PageTitle>Home</PageTitle>
 
-<h1>Hello @_AccountName, you're authorized!</h1>
+<h1>Hello @_AccountName, you're logged in!</h1>
+
+@* Show a layout of Tasks that are Unassigned, Not Started, In Progress or Complete *@
 
 @code {
     private ClaimsPrincipal user;

@@ -1,5 +1,8 @@
+@page "/AddTask"
 @using ITEC245__ToDo_App_Final_Project__.Models
 @using ITEC245__ToDo_App_Final_Project__.Data
+@using Microsoft.EntityFrameworkCore
+
 <h3>AddTask</h3>
 
 <form method="post">
@@ -14,10 +17,10 @@
     <div class="row mt-1">
         <label class="col-md-2">Assigned To:</label>
         <select class="col-md-3">
-            @foreach (User user in Users)
-            {
-                <option>@user.FirstName + @user.LastName</option>
-            }
+            @* @foreach (User user in Users) *@
+            @* { *@
+            @*     <option>@user.FirstName + @user.LastName</option> *@
+            @* } *@
         </select>
     </div>
 </form>
