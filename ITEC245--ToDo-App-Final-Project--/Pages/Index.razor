@@ -1,7 +1,22 @@
 ﻿@page "/"
-
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager;
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, test, you're authorized!</h1>
+<h1>Hello @_AccountName, you're authorized!</h1>
+
+@code {
+    private ClaimsPrincipal user;
+
+    private string _AccountName;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+
+        _AccountName = user.Identity.Name.Substring(0,user.Identity.Name.IndexOf("@"));
+    }
+}
 

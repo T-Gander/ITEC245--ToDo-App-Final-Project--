@@ -18,7 +18,7 @@
             <AuthorizeView>
                 <Authorized>
                     @Body
-                    <button @onclick="LogOut">Logout</button>
+                    
                     
                 </Authorized>
                 <NotAuthorized>
@@ -47,8 +47,5 @@
         NavigationManager.NavigateTo("/Identity/Account/Register", true);
     }
 
-    private void LogOut()
-    {
-        NavigationManager.NavigateTo("/Logout", true);
-    }
+    
 }
