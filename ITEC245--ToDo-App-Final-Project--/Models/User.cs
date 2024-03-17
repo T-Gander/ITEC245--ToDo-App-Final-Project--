@@ -11,6 +11,8 @@ namespace ITEC245__ToDo_App_Final_Project__.Models
 
         public string LastName { get; set; }
 
+        public string Email { get; set; }
+
         public bool IsAdmin { get; set; }
     }
 }
