@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ITEC245__ToDo_App_Final_Project__.Migrations
 {
     [DbContext(typeof(ToDoAppDbContext))]
-    [Migration("20240317011230_InitialDataTables")]
+    [Migration("20240317155232_InitialDataTables")]
     partial class InitialDataTables
     {
         /// <inheritdoc />
@@ -54,6 +54,9 @@ namespace ITEC245__ToDo_App_Final_Project__.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ReportId")
+                        .HasColumnType("int");
+
                     b.Property<int>("TaskID")
                         .HasColumnType("int");
 
@@ -70,7 +73,7 @@ namespace ITEC245__ToDo_App_Final_Project__.Migrations
                     b.Property<int>("UserID")
                         .HasColumnType("int");
 
-                    b.HasIndex("TaskID");
+                    b.HasKey("TaskID", "UserID");
 
                     b.HasIndex("UserID");
 

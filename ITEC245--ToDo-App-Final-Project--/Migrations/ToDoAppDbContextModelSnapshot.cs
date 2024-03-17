@@ -51,6 +51,9 @@ namespace ITEC245__ToDo_App_Final_Project__.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ReportId")
+                        .HasColumnType("int");
+
                     b.Property<int>("TaskID")
                         .HasColumnType("int");
 
@@ -67,7 +70,7 @@ namespace ITEC245__ToDo_App_Final_Project__.Migrations
                     b.Property<int>("UserID")
                         .HasColumnType("int");
 
-                    b.HasIndex("TaskID");
+                    b.HasKey("TaskID", "UserID");
 
                     b.HasIndex("UserID");
 

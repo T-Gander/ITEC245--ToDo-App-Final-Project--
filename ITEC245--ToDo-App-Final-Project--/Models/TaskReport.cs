@@ -3,9 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ITEC245__ToDo_App_Final_Project__.Models
 {
-    
+
     public class TaskReport
     {
+        [Key]
+        public int ReportId { get; set; }
+
         [Required]
         [ForeignKey("Task")]
         public int TaskID { get; set; }

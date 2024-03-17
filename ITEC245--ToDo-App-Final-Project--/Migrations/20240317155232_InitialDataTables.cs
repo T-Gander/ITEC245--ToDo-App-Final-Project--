@@ -45,6 +45,7 @@ namespace ITEC245__ToDo_App_Final_Project__.Migrations
                 name: "TaskReports",
                 columns: table => new
                 {
+                    ReportId = table.Column<int>(type: "int", nullable: false),
                     TaskID = table.Column<int>(type: "int", nullable: false),
                     Report = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -67,6 +68,7 @@ namespace ITEC245__ToDo_App_Final_Project__.Migrations
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_TaskTeams", x => new { x.TaskID, x.UserID });
                     table.ForeignKey(
                         name: "FK_TaskTeams_Tasks_TaskID",
                         column: x => x.TaskID,
@@ -84,11 +86,6 @@ namespace ITEC245__ToDo_App_Final_Project__.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_TaskReports_TaskID",
                 table: "TaskReports",
-                column: "TaskID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TaskTeams_TaskID",
-                table: "TaskTeams",
                 column: "TaskID");
 
             migrationBuilder.CreateIndex(

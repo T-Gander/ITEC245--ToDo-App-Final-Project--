@@ -27,7 +27,7 @@ public class ToDoAppDbContext: DbContext
         modelBuilder.Entity<ITEC245__ToDo_App_Final_Project__.Models.Task>().HasKey(t => t.TaskId);
         modelBuilder.Entity<User>().HasKey(u => u.Id);
         modelBuilder.Entity<TaskReport>().HasNoKey();
-        modelBuilder.Entity<TaskTeam>().HasNoKey();
+        modelBuilder.Entity<TaskTeam>().HasKey(r => new {r.TaskID, r.UserID});
     }
 
     

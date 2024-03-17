@@ -3,38 +3,62 @@
 @using ITEC245__ToDo_App_Final_Project__.Data
 @using Microsoft.EntityFrameworkCore
 
-<AuthorizeView Roles ="Admin">
+@inject IJSRuntime JSRuntime
+
+<AuthorizeView Roles="Admin">
     <Authorized>
-
-        <h3>AddTask</h3>
-
-        <form method="post">
-            <div class="row mt-1">
-                <label class="col-md-2">Task Name:</label>
-                <input class="col-md-3" type="text" name="TaskName"/>
-            </div>
-            <div class="row mt-1">
-                <label class="col-md-2">Task Detail:</label>
-                <textarea class="col-md-3 h-75" rows="4" name="TaskDetail"></textarea>
-            </div>
-            <div class="row mt-1">
-                <label class="col-md-2">Assigned To:</label>
-                <select class="col-md-3">
-                    @foreach (User user in Users) 
-                    { 
-                        <option>@user.FirstName @user.LastName</option> 
-                    }
-                </select>
-            </div>
-        </form>
-
+    <h3>Add a Task</h3>
+        <EditForm Model=@_NewTask OnValidSubmit="@CreateTask">
+             <ChildContent Context="formContext">               @*This line took forever to figure out. Docs are aweful.*@
+                <div class="row mt-1">
+                    <label class="col-md-2">Task Name:</label>
+                    <input class="col-md-3" type="text" name="TaskName" @bind-value=_NewTask.TaskName/>
+                </div>
+                <div class="row mt-1">
+                    <label class="col-md-2">Task Detail:</label>
+                    <InputTextArea class="col-md-3 h-75" rows="4" name="TaskDetail" @bind-Value=_NewTask.TaskDescription></InputTextArea>       @* Why is value capital here??? To get around regular tags? Annoying debug *@
+                </div>
+                <div class="row mt-1">
+                    <label class="col-md-2">Selected Users:</label>
+                    <label class="col-md-3">@allSelectedUsers</label>
+                    <button class="col-md-2" type="button" @onclick="ClearUsers">Clear Selected Users</button>
+                </div>
+                <div class="row mt-1">
+                    <label class="col-md-2">Assigned To:</label>
+                    <select id="dropdown" class="col-md-3" @bind=_SelectedUserId>
+                        <option value="">Select a User</option>
+                        @foreach (User user in Users)
+                        {
+                            <option value="@user.Id">@user.FirstName @user.LastName</option>
+                        }
+                    </select>
+                </div>
+                <div class="row mt-1">
+                    <span class="col-md-2"></span>
+                    <button class="col-md-3" type="button" @onclick="AddAnotherUser">Add Selected User</button>
+                    
+                </div>
+                
+                @*A way to add more users*@
+                <div class="row mt-3">
+                    <span class="col-md-2"></span>
+                    <button class="col-md-3" type="submit">Submit Task</button>
+                </div>
+            </ChildContent>
+        </EditForm>
     </Authorized>
 </AuthorizeView>
-
 @code {
+    private Models.Task _NewTask = new Models.Task();
+
+    private int? _SelectedUserId = null;
+
+    string allSelectedUsers = "";
+
+    Dictionary<string, int?> selectedUsers = new Dictionary<string, int?>();
 
     private List<User> Users;
-    
+
     protected override void OnInitialized()
     {
         using (var context = new ToDoAppDbContext())
@@ -43,4 +67,74 @@
         }        
     }
 
+    private void AddAnotherUser()
+    {
+        if(_SelectedUserId != null)
+        {
+            User user = Users.FirstOrDefault(x => x.Id == _SelectedUserId);
+
+            selectedUsers.Add($"{user.FirstName} {user.LastName}", user.Id);
+
+            allSelectedUsers = "";
+
+            foreach (var selectedUser in selectedUsers)
+            {
+                allSelectedUsers += $"{selectedUser.Key}, ";
+            }
+
+            allSelectedUsers = allSelectedUsers.Remove(allSelectedUsers.LastIndexOf(","));
+
+            Users.Remove(user);
+
+            _SelectedUserId = null;
+        }
+    }
+
+    private void ClearUsers()
+    {
+        allSelectedUsers = "";
+        selectedUsers.Clear();
+
+        using(var context = new ToDoAppDbContext())
+        {
+            Users = context.Users.ToList();
+        }
+
+        _SelectedUserId = null;
+    }
+
+    private async void CreateTask()
+    {
+        using (var context = new ToDoAppDbContext())
+        {
+            if (selectedUsers.Count == 0)
+                _NewTask.Status = Models.Task.TaskProgress.Unassigned;
+            else
+            {
+                List<User> dbUsers = context.Users.ToList();
+
+                _NewTask.Status = Models.Task.TaskProgress.None;
+
+                List<User> mySelectedUsers = new List<User>();
+
+                List<TaskTeam> allAssignedUserTaskRecords = new List<TaskTeam>();
+
+                foreach(var user in selectedUsers)
+                {
+                    User selectedUser = dbUsers.FirstOrDefault(x => x.Id == user.Value);
+                    TaskTeam taskTeam = new TaskTeam();
+                    taskTeam.User = selectedUser;
+                    taskTeam.Task = _NewTask;
+                    allAssignedUserTaskRecords.Add(taskTeam);
+                }
+
+                context.TaskTeams.AddRange(allAssignedUserTaskRecords);
+            }
+            // Save the task and team to the database
+        
+            context.Tasks.Add(_NewTask);
+            
+            await context.SaveChangesAsync();
+        }
+    }
 }
