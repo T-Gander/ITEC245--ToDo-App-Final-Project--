@@ -110,7 +110,7 @@ namespace ITEC245__ToDo_App_Final_Project__.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
-            [Required]
+            [DataType(DataType.Password)]
             [Display(Name = "Require Admin?")]
             public string IsAdmin { get; set; }
         }
@@ -134,9 +134,10 @@ namespace ITEC245__ToDo_App_Final_Project__.Areas.Identity.Pages.Account
 
                 bool proceed = false;
 
-                using(var context = new ToDoAppDbContext())
+                Models.User newUser = new Models.User();
+
+                using (var context = new ToDoAppDbContext())
                 {
-                    Models.User newUser = new Models.User();
                     newUser.FirstName = Input.FirstName;
                     newUser.LastName = Input.LastName;
                     newUser.Email = Input.Email;
@@ -146,7 +147,7 @@ namespace ITEC245__ToDo_App_Final_Project__.Areas.Identity.Pages.Account
                         newUser.IsAdmin = true;
                         proceed = true;
                     }
-                    else if (Input.IsAdmin == "")
+                    else if (Input.IsAdmin == null)
                     {
                         newUser.IsAdmin = false;
                         proceed = true;
@@ -169,6 +170,15 @@ namespace ITEC245__ToDo_App_Final_Project__.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+
+                    if (newUser.IsAdmin)    //Adds user to Admin Role
+                    {
+                        await _userManager.AddToRoleAsync(user, "Admin");
+                    }
+                    else
+                    {
+                        await _userManager.AddToRoleAsync(user, "User");
+                    }
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);

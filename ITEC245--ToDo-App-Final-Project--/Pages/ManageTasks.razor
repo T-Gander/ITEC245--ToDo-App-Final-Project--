@@ -3,6 +3,9 @@
 @using ITEC245__ToDo_App_Final_Project__.Models
 @using ITEC245__ToDo_App_Final_Project__.Data
 
+<AuthorizeView Roles="Admin">
+    <Authorized>
+                
 <h3>Manage Tasks</h3>
 
 @* Should show a page of all current tasks. Buttons should exist to add a new task (page redirect), delete a task, edit a task. *@
@@ -14,6 +17,9 @@
     <button class="col-md-1 p-2" @onclick=EditTask>Edit a Task</button>
     <button class="col-md-1 p-2" @onclick=DeleteTask>Delete a Task</button>
 </div>
+
+    </Authorized>
+</AuthorizeView>
 
 @code{
 
