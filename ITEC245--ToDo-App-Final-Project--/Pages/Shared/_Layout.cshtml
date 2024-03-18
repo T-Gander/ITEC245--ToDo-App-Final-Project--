@@ -7,7 +7,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ITEC245--ToDo-App-Final-Project--</title>
+    <title>To Do App</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/Identity/lib/bootstrap/dist/css/bootstrap.css" />
@@ -22,10 +22,10 @@
     </environment>
 </head>
 <body>
-    <header>
+    @* <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" href="~/">ITEC245--ToDo-App-Final-Project--</a>
+                <a class="navbar-brand" href="~/">To Do App</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -47,7 +47,7 @@
                 </div>
             </div>
         </nav>
-    </header>
+    </header> *@
 
     <div class="container">
         @* <partial name="_CookieConsentPartial" optional /> *@
@@ -57,7 +57,7 @@
     </div>
     <footer class="footer border-top pl-3 text-muted">
         <div class="container">
-        &copy; 2024 - ITEC245--ToDo-App-Final-Project--
+        &copy; 2024 - To Do App -
             @{
                 var foundPrivacy = Url.Page("/Privacy", new { area = "" });
             }
