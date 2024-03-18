@@ -1,0 +1,42 @@
+﻿@page "/AllTasks"
+@using ITEC245__ToDo_App_Final_Project__.Data;
+
+<h3>All Tasks</h3>
+
+<table class="table">   <!-- Boilerplate taken from bootstrap docs -->
+    <thead>
+        <tr>
+            <th scope="col">Task ID</th>
+            <th scope="col">Task Name</th>
+            <th scope="col">Status</th>
+            <th scope="col">Options</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach(var task in Tasks)
+        {
+            <tr>
+                <th scope="row">@task.TaskId</th>
+                <td>@task.TaskName</td>
+                <td>@task.Status</td>
+                <td>
+                    <button>View Details</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+    @code {
+    private List<Models.Task> Tasks;
+
+    protected override void OnInitialized()
+    {
+        using(var context = new ToDoAppDbContext())
+        {
+            Tasks = context.Tasks.ToList();
+        }
+    }
+
+}
