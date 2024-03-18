@@ -1,9 +1,10 @@
-﻿@page "/AllTasks"
+﻿@page "/AvailableTasks"
 @using ITEC245__ToDo_App_Final_Project__.Data;
 
-<h3>All Tasks</h3>
+<h3>AvailableTasks</h3>
 
-<table class="table">   <!-- Boilerplate taken from bootstrap docs -->
+<table class="table">
+    <!-- Boilerplate taken from bootstrap docs -->
     <thead>
         <tr>
             <th scope="col">Task ID</th>
@@ -14,7 +15,7 @@
     </thead>
     <tbody>
         <!-- Would like to add sorting, will need c# methods in code section -->
-        @foreach(var task in Tasks)
+        @foreach (var task in Tasks)
         {
             <tr>
                 <th scope="row">@task.TaskId</th>
@@ -28,14 +29,15 @@
     </tbody>
 </table>
 
-    @code {
+@code {
     private List<Models.Task> Tasks;
 
     protected override void OnInitialized()
     {
-        using(var context = new ToDoAppDbContext())
+        using (var context = new ToDoAppDbContext())
         {
             Tasks = context.Tasks.ToList();
+            Tasks.RemoveAll(x => x.Status != Models.Task.TaskProgress.Unassigned);
         }
     }
 
