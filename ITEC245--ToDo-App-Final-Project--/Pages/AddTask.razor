@@ -3,7 +3,7 @@
 @using ITEC245__ToDo_App_Final_Project__.Data
 @using Microsoft.EntityFrameworkCore
 
-@inject IJSRuntime JSRuntime
+@inject IJSRuntime JSRuntime //Needed to show browser alerts, blazor doesn't have built in functionality as far as I know.
 
 <AuthorizeView Roles="Admin">
     <Authorized>
@@ -51,6 +51,8 @@
 @code {
     private Models.Task _NewTask = new Models.Task();
 
+    private Popups Popups; //May be a better way to set this up using Program.cs
+
     private int? _SelectedUserId = null;
 
     string allSelectedUsers = "";
@@ -61,6 +63,8 @@
 
     protected override void OnInitialized()
     {
+        Popups = new Popups(JSRuntime);
+
         using (var context = new ToDoAppDbContext())
         {
             Users = context.Users.ToList();
@@ -105,36 +109,47 @@
 
     private async void CreateTask()
     {
-        using (var context = new ToDoAppDbContext())
+        try
         {
-            if (selectedUsers.Count == 0)
-                _NewTask.Status = Models.Task.TaskProgress.Unassigned;
-            else
+            using (var context = new ToDoAppDbContext())
             {
-                List<User> dbUsers = context.Users.ToList();
-
-                _NewTask.Status = Models.Task.TaskProgress.None;
-
-                List<User> mySelectedUsers = new List<User>();
-
-                List<TaskTeam> allAssignedUserTaskRecords = new List<TaskTeam>();
-
-                foreach(var user in selectedUsers)
+                if (selectedUsers.Count == 0)
+                    _NewTask.Status = Models.Task.TaskProgress.Unassigned;
+                else
                 {
-                    User selectedUser = dbUsers.FirstOrDefault(x => x.Id == user.Value);
-                    TaskTeam taskTeam = new TaskTeam();
-                    taskTeam.User = selectedUser;
-                    taskTeam.Task = _NewTask;
-                    allAssignedUserTaskRecords.Add(taskTeam);
-                }
+                    List<User> dbUsers = context.Users.ToList();
 
-                context.TaskTeams.AddRange(allAssignedUserTaskRecords);
+                    _NewTask.Status = Models.Task.TaskProgress.None;
+
+                    List<User> mySelectedUsers = new List<User>();
+
+                    List<TaskTeam> allAssignedUserTaskRecords = new List<TaskTeam>();
+
+                    foreach (var user in selectedUsers)
+                    {
+                        User selectedUser = dbUsers.FirstOrDefault(x => x.Id == user.Value);
+                        TaskTeam taskTeam = new TaskTeam();
+                        taskTeam.User = selectedUser;
+                        taskTeam.Task = _NewTask;
+                        allAssignedUserTaskRecords.Add(taskTeam);
+                    }
+
+                    context.TaskTeams.AddRange(allAssignedUserTaskRecords);
+                }
+                // Save the task and team to the database
+
+                context.Tasks.Add(_NewTask);
+
+                await context.SaveChangesAsync();
             }
-            // Save the task and team to the database
-        
-            context.Tasks.Add(_NewTask);
-            
-            await context.SaveChangesAsync();
+
+            await Popups.AlertPopup("Task submitted successfully.");
         }
+        catch
+        {
+            await Popups.AlertPopup("An error occurred on Task creation.");
+        }
+
+        //Show alert saying that the task was added successfully, or unsuccessfully. Then clear inputs.
     }
 }
