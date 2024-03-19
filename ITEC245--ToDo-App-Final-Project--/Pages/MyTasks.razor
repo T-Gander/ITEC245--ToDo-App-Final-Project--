@@ -1,0 +1,58 @@
+﻿@page "/MyTasks"
+
+@using ITEC245__ToDo_App_Final_Project__.Data;
+@using System.Security.Claims
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h3>My Tasks</h3>
+
+@* Generate a list of tasks, generate taskteams assigned to logged in user. Make a new list of the matches and show them in table. *@
+
+<table class="table">
+    <!-- Boilerplate taken from bootstrap docs -->
+    <thead>
+        <tr>
+            <th scope="col">Task ID</th>
+            <th scope="col">Task Name</th>
+            <th scope="col">Status</th>
+            <th scope="col">Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Would like to add sorting, will need c# methods in code section -->
+        @foreach (var task in MyTasksList)
+        {
+            <tr>
+                <th scope="row">@task.TaskId</th>
+                <td>@task.TaskName</td>
+                <td>@task.Status</td>
+                <td>
+                    <button>View Details</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    List<Models.Task> MyTasksList = new List<Models.Task>();
+
+    private ClaimsPrincipal user;
+
+    private int _UserID;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+
+        using(var context = new ToDoAppDbContext())
+        {
+            _UserID = context.Users.FirstOrDefault(x => x.Email == user.Identity.Name).Id;
+
+            MyTasksList = context.TaskTeams.Where(x => x.UserID == _UserID).Select(x => x.Task).ToList();
+
+        }
+    }
+}
