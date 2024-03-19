@@ -16,6 +16,16 @@
     </thead>
     <tbody>
         <!-- Would like to add sorting, will need c# methods in code section -->
+        <AuthorizeView Roles="Admin">
+            <Authorized>
+            <tr>
+                <td>
+                    <button>Add a Task</button>
+                </td>
+            </tr>
+            </Authorized>
+        </AuthorizeView>
+
         @foreach(var task in Tasks)
         {
             <tr>
@@ -24,9 +34,18 @@
                 <td>@task.Status</td>
                 <td>
                     <button @onclick="() => ViewDetails(task.TaskId)">View Details</button>
+
+                    <AuthorizeView Roles="Admin">
+                        <Authorized>
+                            <button>Edit Details</button>
+                            <button>Delete</button>
+                        </Authorized>
+                    </AuthorizeView>
                 </td>
             </tr>
         }
+
+        
     </tbody>
 </table>
 

@@ -12,6 +12,14 @@
         <p><strong>Status:</strong> @_Task.Status</p>
         <p>@_Task.TaskDescription</p>
     </div>
+    <div>
+        <AuthorizeView Roles="Admin">
+            <Authorized>
+                <button>Edit Details</button>
+                <button>Delete</button>
+            </Authorized>
+        </AuthorizeView>
+    </div>
 }
 else
 {
@@ -30,6 +38,5 @@ else
         {
             _Task = context.Tasks.FirstOrDefault(t => t.TaskId == taskId);
         }
-        
     }
 }
