@@ -1,3 +1,4 @@
+using ITEC245__ToDo_App_Final_Project__;
 using ITEC245__ToDo_App_Final_Project__.Areas.Identity;
 using ITEC245__ToDo_App_Final_Project__.Data;
 using Microsoft.AspNetCore.Components;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.JSInterop;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +24,11 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 builder.Services.AddScoped<ToDoAppDbContext>();
+builder.Services.AddScoped<Popups>(sp =>
+{
+    var jsRuntime = sp.GetRequiredService<IJSRuntime>();        //Needed help from ChatGPT to figure out how to instatiate this using the JSRuntime.
+    return new Popups(jsRuntime);
+});
 
 var app = builder.Build();
 

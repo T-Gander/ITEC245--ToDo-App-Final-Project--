@@ -10,6 +10,12 @@
 
 @* Generate a list of tasks, generate taskteams assigned to logged in user. Make a new list of the matches and show them in table. *@
 
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        <button>Add a Task</button>
+    </Authorized>
+</AuthorizeView>
+
 <table class="table">
     <!-- Boilerplate taken from bootstrap docs -->
     <thead>
@@ -23,16 +29,6 @@
     <tbody>
         <!-- Would like to add sorting, will need c# methods in code section -->
 
-        <AuthorizeView Roles="Admin">
-            <Authorized>
-                <tr>
-                    <td>
-                        <button>Add a Task</button>
-                    </td>
-                </tr>
-            </Authorized>
-        </AuthorizeView>
-
         <!--Use a component here that uses a list as a parameter-->
 
         @foreach (var task in MyTasksList)
@@ -43,6 +39,7 @@
                 <td>@task.Status</td>
                 <td>
                     <button @onclick="() => ViewDetails(task.TaskId)">View Details</button>
+                    <button @onclick="() => AddReport(task.TaskId)">Add Report</button>
                     <AuthorizeView Roles="Admin">
                         <Authorized>
                             <button>Edit Details</button>
@@ -72,12 +69,16 @@
             _UserID = context.Users.FirstOrDefault(x => x.Email == user.Identity.Name).Id;
 
             MyTasksList = context.TaskTeams.Where(x => x.UserID == _UserID).Select(x => x.Task).ToList();
-
         }
     }
 
     private void ViewDetails(int taskId)
     {
         NavigationManager.NavigateTo($"/TaskDetails/{taskId}");
+    }
+
+    private void AddReport(int taskId)
+    {
+        NavigationManager.NavigateTo($"/TaskReport/{taskId}/{_UserID}");
     }
 }

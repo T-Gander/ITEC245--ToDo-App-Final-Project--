@@ -1,0 +1,88 @@
+﻿@page "/TaskReport/{taskId:int}/{userId:int}"       //Using routing parameters
+
+@using ITEC245__ToDo_App_Final_Project__.Data;
+
+@inject Popups Popups
+
+@if (_Task != null)
+{
+<h3>Task Report for [@_Task.TaskName] [ID: @_Task.TaskId]</h3>
+
+    <EditForm Model=@_NewReport OnValidSubmit="@CreateTaskReport">
+        <div>
+            <p><strong>Status:</strong> @_Task.Status</p>   <!-- Make this a dropdown to change status? Or only update to in-progress? Only Admin can change to other options -->
+            <p>@_Task.TaskDescription</p>
+        </div>
+        <div class="row">
+            <!-- Text box for report -->
+            <InputTextArea class="col-md-5 h-75" rows="4" name="TaskDetail" @bind-Value=_NewReport.Report></InputTextArea>
+        </div>
+        <button type="submit">Submit</button>
+    </EditForm>
+    
+
+    @foreach(var report in _PreviousReports)
+    {
+        <div class="row">
+            <div class="col-md-4">
+                <p><strong>Report ID: </strong>@report.ReportId</p>   <!-- Make this a dropdown to change status? Or only update to in-progress? Only Admin can change to other options -->
+                <p>@report.Report</p>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <p>Task not found.</p>
+}
+
+@code {
+    [Parameter]
+    public int taskId { get; set; }     @* Tag needed to retrieve from url *@
+    [Parameter]
+    public int userId { get; set; }
+    @* Tag needed to retrieve from url *@
+
+    private Models.TaskReport _NewReport = new Models.TaskReport();
+
+    List<Models.TaskReport> _PreviousReports;
+
+    private Models.Task _Task;
+
+    private Models.User _User;
+
+    protected override void OnInitialized()
+    {
+        using (var context = new ToDoAppDbContext())
+        {
+            _Task = context.Tasks.FirstOrDefault(t => t.TaskId == taskId);
+
+            _User = context.Users.FirstOrDefault(u => u.Id == userId);
+
+            _PreviousReports = context.TaskReports.Where(x => x.TaskID == taskId).ToList();
+
+            _PreviousReports = _PreviousReports.OrderByDescending(x => x.ReportId).ToList();
+        }
+    }
+
+    private async Task CreateTaskReport()
+    {
+        try
+        {
+            _NewReport.Task = _Task;
+
+            using (var context = new ToDoAppDbContext())
+            {
+                context.TaskReports.Add(_NewReport);
+
+                await context.SaveChangesAsync();
+            }
+
+            await Popups.AlertPopup("Report submitted successfully.");
+        }
+        catch (Exception ex)
+        {
+            await Popups.AlertPopup("An error occurred on Report creation.");
+        }
+    }
+}

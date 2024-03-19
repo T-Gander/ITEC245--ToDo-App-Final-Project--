@@ -3,7 +3,9 @@
 @using ITEC245__ToDo_App_Final_Project__.Data
 @using Microsoft.EntityFrameworkCore
 
-@inject IJSRuntime JSRuntime //Needed to show browser alerts, blazor doesn't have built in functionality as far as I know.
+@*@inject IJSRuntime JSRuntime //Needed to show browser alerts, blazor doesn't have built in functionality as far as I know. *@
+
+@inject Popups Popups
 
 <AuthorizeView Roles="Admin">
     <Authorized>
@@ -54,7 +56,7 @@
 @code {
     private Models.Task _NewTask = new Models.Task();
 
-    private Popups Popups; //May be a better way to set this up using Program.cs
+    //private Popups Popups; //May be a better way to set this up using Program.cs
 
     private int? _SelectedUserId = null;
 
@@ -66,7 +68,7 @@
 
     protected override void OnInitialized()
     {
-        Popups = new Popups(JSRuntime);
+        //Popups = new Popups(JSRuntime);
 
         using (var context = new ToDoAppDbContext())
         {

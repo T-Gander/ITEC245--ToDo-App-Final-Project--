@@ -132,43 +132,43 @@ namespace ITEC245__ToDo_App_Final_Project__.Areas.Identity.Pages.Account
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 
-                bool proceed = false;
-
-                Models.User newUser = new Models.User();
-
-                using (var context = new ToDoAppDbContext())
-                {
-                    newUser.FirstName = Input.FirstName;
-                    newUser.LastName = Input.LastName;
-                    newUser.Email = Input.Email;
-
-                    if(Input.IsAdmin == "superuser")
-                    {
-                        newUser.IsAdmin = true;
-                        proceed = true;
-                    }
-                    else if (Input.IsAdmin == null)
-                    {
-                        newUser.IsAdmin = false;
-                        proceed = true;
-                    }
-
-                    if (proceed)
-                    {
-                        context.Users.Add(newUser);
-                        context.SaveChanges();
-                    }
-                }
-
-                if (!proceed)
-                {
-                    return Page();
-                }
-
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
+                    bool proceed = false;
+
+                    Models.User newUser = new Models.User();
+
+                    using (var context = new ToDoAppDbContext())
+                    {
+                        newUser.FirstName = Input.FirstName;
+                        newUser.LastName = Input.LastName;
+                        newUser.Email = Input.Email;
+
+                        if (Input.IsAdmin == "superuser")
+                        {
+                            newUser.IsAdmin = true;
+                            proceed = true;
+                        }
+                        else if (Input.IsAdmin == null)
+                        {
+                            newUser.IsAdmin = false;
+                            proceed = true;
+                        }
+
+                        if (proceed)
+                        {
+                            context.Users.Add(newUser);
+                            context.SaveChanges();
+                        }
+                    }
+
+                    if (!proceed)
+                    {
+                        return Page();
+                    }
+
                     _logger.LogInformation("User created a new account with password.");
 
                     if (newUser.IsAdmin)    //Adds user to Admin Role
