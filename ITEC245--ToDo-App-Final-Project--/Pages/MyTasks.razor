@@ -4,6 +4,7 @@
 @using System.Security.Claims
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
 
 <h3>My Tasks</h3>
 
@@ -28,7 +29,7 @@
                 <td>@task.TaskName</td>
                 <td>@task.Status</td>
                 <td>
-                    <button>View Details</button>
+                    <button @onclick="() => ViewDetails(task.TaskId)">View Details</button>
                 </td>
             </tr>
         }
@@ -54,5 +55,10 @@
             MyTasksList = context.TaskTeams.Where(x => x.UserID == _UserID).Select(x => x.Task).ToList();
 
         }
+    }
+
+    private void ViewDetails(int taskId)
+    {
+        NavigationManager.NavigateTo($"/TaskDetails/{taskId}");
     }
 }

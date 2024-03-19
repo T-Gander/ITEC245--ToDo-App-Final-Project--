@@ -1,0 +1,35 @@
+﻿@page "/TaskDetails/{taskId:int}"       @*Using routing parameters*@
+
+@using ITEC245__ToDo_App_Final_Project__.Data;
+
+<h3>TaskDetails</h3>
+
+@if (_Task != null)
+{
+    <div>
+        <p><strong>Task ID:</strong> @_Task.TaskId</p>
+        <p><strong>Task Name:</strong> @_Task.TaskName</p>
+        <p><strong>Status:</strong> @_Task.Status</p>
+        <p>@_Task.TaskDescription</p>
+    </div>
+}
+else
+{
+    <p>Task not found.</p>
+}
+
+@code {
+    [Parameter]
+    public int taskId { get; set; }     @* Tag needed to retrieve from url *@
+
+    private Models.Task _Task;
+
+    protected override void OnInitialized()
+    {
+        using(var context = new ToDoAppDbContext())
+        {
+            _Task = context.Tasks.FirstOrDefault(t => t.TaskId == taskId);
+        }
+        
+    }
+}

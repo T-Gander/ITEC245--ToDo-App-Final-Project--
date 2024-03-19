@@ -1,6 +1,8 @@
 ﻿@page "/AvailableTasks"
 @using ITEC245__ToDo_App_Final_Project__.Data;
 
+@inject NavigationManager NavigationManager
+
 <h3>Available Tasks</h3>
 
 <table class="table">
@@ -22,7 +24,7 @@
                 <td>@task.TaskName</td>
                 <td>@task.Status</td>
                 <td>
-                    <button>View Details</button>
+                    <button @onclick="() => ViewDetails(task.TaskId)">View Details</button>
                 </td>
             </tr>
         }
@@ -39,6 +41,11 @@
             Tasks = context.Tasks.ToList();
             Tasks.RemoveAll(x => x.Status != Models.Task.TaskProgress.Unassigned);
         }
+    }
+
+    private void ViewDetails(int taskId)
+    {
+        NavigationManager.NavigateTo($"/TaskDetails/{taskId}");
     }
 
 }
