@@ -10,7 +10,9 @@
         <p><strong>Task ID:</strong> @_Task.TaskId</p>
         <p><strong>Task Name:</strong> @_Task.TaskName</p>
         <p><strong>Status:</strong> @_Task.Status</p>
-        <p>@_Task.TaskDescription</p>
+        <InputTextArea @bind-Value=_Task.TaskDescription>
+
+        </InputTextArea>
     </div>
     <div>
         <AuthorizeView Roles="Admin">
