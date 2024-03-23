@@ -55,10 +55,11 @@
                     @*A way to add more users*@
                     <div class="row mt-3">
                         <span class="col-md-2"></span>
-                        <button class="col-md-3" type="submit">Submit Task</button>
+                        <button class="col-md-3" type="submit">Edit Task</button>
                     </div>
                 </ChildContent>
             </EditForm>
+            <button class="btn btn-danger" @onclick=DeleteTask>Delete Task</button>
         }
         else
         {
@@ -98,6 +99,22 @@
             _Task = context.Tasks.FirstOrDefault(t => t.TaskId == taskId);
         }
         _ProgressTypes.AddRange((Models.Task.TaskProgress[])Enum.GetValues(typeof(Models.Task.TaskProgress)));      //Kinda gross syntax, but adds all of the types contained in TaskProgress to a list.
+    }
+
+    private async void DeleteTask()
+    {
+        using(var context = new ToDoAppDbContext())
+        {
+            context.TaskReports.RemoveRange(context.TaskReports.Where(x => x.TaskID == taskId));
+            context.TaskTeams.RemoveRange(context.TaskTeams.Where(x => x.TaskID == taskId));
+            context.Tasks.Remove(context.Tasks.FirstOrDefault(x => x.TaskId == taskId));
+
+            context.SaveChanges();
+        }
+
+        await Popups.AlertPopup("Task deleted successfully.");
+
+        NavigationManager.NavigateTo("/AllTasks", true);
     }
 
     private void AddAnotherUser()
