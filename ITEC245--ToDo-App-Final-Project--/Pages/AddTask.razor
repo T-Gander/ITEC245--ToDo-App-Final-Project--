@@ -24,7 +24,7 @@
                 <div class="row mt-1">
                     <label class="col-md-2">Selected Users:</label>
                     <label class="col-md-3">@allSelectedUsers</label>
-                    <button class="col-md-2" type="button" @onclick="ClearUsers">Clear Selected Users</button>
+                    <button class="col-md-2 btn-danger" type="button" @onclick="ClearUsers">Clear Selected Users</button>
                 </div>
                 <div class="row mt-1">
                     <label class="col-md-2">Assigned To:</label>
@@ -38,14 +38,14 @@
                 </div>
                 <div class="row mt-1">
                     <span class="col-md-2"></span>
-                    <button class="col-md-3" type="button" @onclick="AddAnotherUser">Add Selected User</button>
+                    <button class="col-md-3 btn btn-primary" type="button" @onclick="AddAnotherUser">Add Selected User</button>
                     
                 </div>
                 
                 @*A way to add more users*@
                 <div class="row mt-3">
                     <span class="col-md-2"></span>
-                    <button class="col-md-3" type="submit">Submit Task</button>
+                    <button class="col-md-3 btn btn-danger" type="submit">Submit Task</button>
                 </div>
             </ChildContent>
         </EditForm>

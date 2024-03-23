@@ -7,7 +7,7 @@
 
 <AuthorizeView Roles="Admin">
     <Authorized>
-        <button @onclick=AddTask>Add a Task</button>
+        <button class="btn btn-danger" @onclick=AddTask>Add a Task</button>
     </Authorized>
 </AuthorizeView>
 
@@ -28,13 +28,11 @@
                 <td>@task.TaskName</td>
                 <td>@task.Status</td>
                 <td>
-                    <button @onclick="() => ViewDetails(task.TaskId)">View Details</button>
+                    <button class="btn btn-primary" @onclick="() => ViewDetails(task.TaskId)">View Details</button>
 
                     <AuthorizeView Roles="Admin">
                         <Authorized>
-                            <button @onclick="() => CompleteTask(task.TaskId)">Complete Task</button>
-                            <button @onclick="() => EditDetails(task.TaskId)">Edit Details</button>
-                            <button @onclick="() => DeleteTask(task.TaskId)">Delete</button>
+                            <button class="btn btn-danger" @onclick="() => EditTask(task.TaskId)">Edit Task</button>
                         </Authorized>
                     </AuthorizeView>
                 </td>
@@ -61,20 +59,9 @@
         NavigationManager.NavigateTo($"/TaskDetails/{taskId}");
     }
 
-    private void EditDetails(int taskId)
+    private void EditTask(int taskId)
     {
         NavigationManager.NavigateTo($"/TaskDetails/EditDetails/{taskId}");
-    }
-
-    private void CompleteTask(int taskId)
-    {
-        using(var context = new ToDoAppDbContext())
-        {
-            context.Tasks.FirstOrDefault(x => x.TaskId == taskId).Status = Models.Task.TaskProgress.Complete;
-            context.SaveChanges();
-        }
-
-        NavigationManager.NavigateTo("/AllTasks", true);
     }
 
     private void DeleteTask(int taskId)

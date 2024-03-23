@@ -1,15 +1,9 @@
-﻿@page "/AvailableTasks"
+﻿@page "/UnassignedTasks"
 @using ITEC245__ToDo_App_Final_Project__.Data;
 
 @inject NavigationManager NavigationManager
 
-<h3>Available Tasks</h3>
-
-<AuthorizeView Roles="Admin">
-    <Authorized>
-        <button @onclick=AddTask>Add a Task</button>
-    </Authorized>
-</AuthorizeView>
+<h3>Unassigned Tasks</h3>
 
 <table class="table">
     <!-- Boilerplate taken from bootstrap docs -->
@@ -31,14 +25,7 @@
                 <td>@task.TaskName</td>
                 <td>@task.Status</td>
                 <td>
-                    <button @onclick="() => ViewDetails(task.TaskId)">View Details</button>
-
-                    <AuthorizeView Roles="Admin">
-                        <Authorized>
-                            <button>Edit Details</button>
-                            <button>Delete</button>
-                        </Authorized>
-                    </AuthorizeView>
+                    <button class="btn btn-primary" @onclick="() => ViewDetails(task.TaskId)">View Details</button>
                 </td>
             </tr>
         }

@@ -10,11 +10,11 @@
 
 @* Generate a list of tasks, generate taskteams assigned to logged in user. Make a new list of the matches and show them in table. *@
 
-<AuthorizeView Roles="Admin">
+@* <AuthorizeView Roles="Admin">
     <Authorized>
-        <button @onclick=AddTask>Add a Task</button>
+        <button class="btn btn-info" @onclick=AddTask>Add a Task</button>
     </Authorized>
-</AuthorizeView>
+</AuthorizeView> *@
 
 <table class="table">
     <!-- Boilerplate taken from bootstrap docs -->
@@ -38,12 +38,11 @@
                 <td>@task.TaskName</td>
                 <td>@task.Status</td>
                 <td>
-                    <button @onclick="() => ViewDetails(task.TaskId)">View Details</button>
-                    <button @onclick="() => AddReport(task.TaskId)">Add Report</button>
+                    <button class="btn btn-primary" @onclick="() => ViewDetails(task.TaskId)">View Details</button>
+                    <button class="btn btn-primary" @onclick="() => AddReport(task.TaskId)">Add Report</button>
                     <AuthorizeView Roles="Admin">
                         <Authorized>
-                            <button>Edit Details</button>
-                            <button>Delete</button>
+                            <button @onclick="() => EditTask(task.TaskId)" class="btn btn-danger">Edit Details</button>
                         </Authorized>
                     </AuthorizeView>
                 </td>
@@ -82,8 +81,8 @@
         NavigationManager.NavigateTo($"/TaskReport/{taskId}/{_UserID}");
     }
 
-    private void AddTask()
+    private void EditTask(int taskId)
     {
-        NavigationManager.NavigateTo("/AddTask", true);
+        NavigationManager.NavigateTo($"/TaskDetails/EditDetails/{taskId}");
     }
 }

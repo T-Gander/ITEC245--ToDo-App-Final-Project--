@@ -1,0 +1,22 @@
+﻿.btn-primary {
+    background-color: rebeccapurple;
+    border-color: rebeccapurple;
+}
+
+.btn-primary:hover {
+    background-color: black;
+    color: white;
+    border-color: rebeccapurple;
+}
+
+.btn-danger {
+    color: white;
+    border-color: orangered;
+    background-color: rebeccapurple;
+}
+
+.btn-danger:hover {
+    background-color: orangered;
+    color: white;
+    border-color: orangered;
+}
