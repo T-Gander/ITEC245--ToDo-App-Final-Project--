@@ -5,6 +5,12 @@
 
 <h3>Available Tasks</h3>
 
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        <button @onclick=AddTask>Add a Task</button>
+    </Authorized>
+</AuthorizeView>
+
 <table class="table">
     <!-- Boilerplate taken from bootstrap docs -->
     <thead>
@@ -17,16 +23,6 @@
     </thead>
     <tbody>
         <!-- Would like to add sorting, will need c# methods in code section -->
-
-        <AuthorizeView Roles="Admin">
-            <Authorized>
-                <tr>
-                    <td>
-                        <button>Add a Task</button>
-                    </td>
-                </tr>
-            </Authorized>
-        </AuthorizeView>
 
         @foreach (var task in Tasks)
         {
@@ -66,4 +62,8 @@
         NavigationManager.NavigateTo($"/TaskDetails/{taskId}");
     }
 
+    private void AddTask()
+    {
+        NavigationManager.NavigateTo("/AddTask", true);
+    }
 }

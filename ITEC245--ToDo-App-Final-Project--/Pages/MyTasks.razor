@@ -12,7 +12,7 @@
 
 <AuthorizeView Roles="Admin">
     <Authorized>
-        <button>Add a Task</button>
+        <button @onclick=AddTask>Add a Task</button>
     </Authorized>
 </AuthorizeView>
 
@@ -80,5 +80,10 @@
     private void AddReport(int taskId)
     {
         NavigationManager.NavigateTo($"/TaskReport/{taskId}/{_UserID}");
+    }
+
+    private void AddTask()
+    {
+        NavigationManager.NavigateTo("/AddTask", true);
     }
 }

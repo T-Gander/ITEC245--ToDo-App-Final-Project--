@@ -47,15 +47,20 @@ namespace ITEC245__ToDo_App_Final_Project__.Migrations
 
             modelBuilder.Entity("ITEC245__ToDo_App_Final_Project__.Models.TaskReport", b =>
                 {
+                    b.Property<int>("ReportId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportId"));
+
                     b.Property<string>("Report")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ReportId")
-                        .HasColumnType("int");
-
                     b.Property<int>("TaskID")
                         .HasColumnType("int");
+
+                    b.HasKey("ReportId");
 
                     b.HasIndex("TaskID");
 

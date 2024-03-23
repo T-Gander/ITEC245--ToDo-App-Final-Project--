@@ -3,6 +3,7 @@
 @using ITEC245__ToDo_App_Final_Project__.Data;
 
 @inject Popups Popups
+@inject NavigationManager NavigationManager
 
 @if (_Task != null)
 {
@@ -69,7 +70,7 @@ else
     {
         try
         {
-            _NewReport.Task = _Task;
+            _NewReport.TaskID = _Task.TaskId;
 
             using (var context = new ToDoAppDbContext())
             {
@@ -79,6 +80,8 @@ else
             }
 
             await Popups.AlertPopup("Report submitted successfully.");
+
+            NavigationManager.NavigateTo("/MyTasks", true);
         }
         catch (Exception ex)
         {

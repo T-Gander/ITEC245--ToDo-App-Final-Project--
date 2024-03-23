@@ -6,12 +6,13 @@
 @*@inject IJSRuntime JSRuntime //Needed to show browser alerts, blazor doesn't have built in functionality as far as I know. *@
 
 @inject Popups Popups
+@inject NavigationManager NavigationManager
 
 <AuthorizeView Roles="Admin">
     <Authorized>
     <h3>Add a Task</h3>
         <EditForm Model=@_NewTask OnValidSubmit="@CreateTask">
-             <ChildContent Context="formContext">               @*This line took forever to figure out. Docs are aweful.*@
+             <ChildContent Context="formContext">               @*This line took forever to figure out. Docs are awful.*@
                 <div class="row mt-1">
                     <label class="col-md-2">Task Name:</label>
                     <input class="col-md-3" type="text" name="TaskName" @bind-value=_NewTask.TaskName/>
@@ -124,7 +125,7 @@
                 {
                     List<User> dbUsers = context.Users.ToList();
 
-                    _NewTask.Status = Models.Task.TaskProgress.None;
+                    _NewTask.Status = Models.Task.TaskProgress.NoProgress;
 
                     List<User> mySelectedUsers = new List<User>();
 
@@ -149,6 +150,8 @@
             }
 
             await Popups.AlertPopup("Task submitted successfully.");
+
+            NavigationManager.NavigateTo("/AllTasks", true);
         }
         catch
         {

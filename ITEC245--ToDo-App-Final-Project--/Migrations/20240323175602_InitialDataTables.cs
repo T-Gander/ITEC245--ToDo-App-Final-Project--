@@ -45,12 +45,14 @@ namespace ITEC245__ToDo_App_Final_Project__.Migrations
                 name: "TaskReports",
                 columns: table => new
                 {
-                    ReportId = table.Column<int>(type: "int", nullable: false),
+                    ReportId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     TaskID = table.Column<int>(type: "int", nullable: false),
                     Report = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_TaskReports", x => x.ReportId);
                     table.ForeignKey(
                         name: "FK_TaskReports_Tasks_TaskID",
                         column: x => x.TaskID,
