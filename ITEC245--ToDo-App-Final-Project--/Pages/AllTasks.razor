@@ -32,8 +32,9 @@
 
                     <AuthorizeView Roles="Admin">
                         <Authorized>
+                            <button @onclick="() => CompleteTask(task.TaskId)">Complete Task</button>
                             <button>Edit Details</button>
-                            <button>Delete</button>
+                            <button @onclick="() => DeleteTask(task.TaskId)">Delete</button>
                         </Authorized>
                     </AuthorizeView>
                 </td>
@@ -44,20 +45,47 @@
     </tbody>
 </table>
 
-    @code {
+@code {
     private List<Models.Task> Tasks;
 
     protected override void OnInitialized()
     {
         using(var context = new ToDoAppDbContext())
         {
-            Tasks = context.Tasks.ToList();
+            Tasks = context.Tasks.OrderBy(t => t.Status).ThenBy(x => x.TaskId).ToList();
         }
     }
 
     private void ViewDetails(int taskId)
     {
         NavigationManager.NavigateTo($"/TaskDetails/{taskId}");
+    }
+
+    private void CompleteTask(int taskId)
+    {
+        using(var context = new ToDoAppDbContext())
+        {
+            context.Tasks.FirstOrDefault(x => x.TaskId == taskId).Status = Models.Task.TaskProgress.Complete;
+            context.SaveChanges();
+        }
+
+        NavigationManager.NavigateTo("/AllTasks", true);
+    }
+
+    private void DeleteTask(int taskId)
+    {
+        using (var context = new ToDoAppDbContext())
+        {
+            Models.Task _Task = context.Tasks.FirstOrDefault(x => x.TaskId == taskId);
+
+            List<Models.TaskReport> reportsToDelete = context.TaskReports.Where(x => x.TaskID == taskId).ToList();
+            context.TaskReports.RemoveRange(reportsToDelete);
+
+            context.Tasks.Remove(_Task);
+            context.SaveChanges();
+        }
+
+        NavigationManager.NavigateTo("/AllTasks", true);
     }
 
     private void AddTask()

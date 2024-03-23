@@ -74,6 +74,8 @@ else
 
             using (var context = new ToDoAppDbContext())
             {
+                context.Tasks.FirstOrDefault(x => x.TaskId == _Task.TaskId).Status = Models.Task.TaskProgress.InProgress;
+
                 context.TaskReports.Add(_NewReport);
 
                 await context.SaveChangesAsync();
