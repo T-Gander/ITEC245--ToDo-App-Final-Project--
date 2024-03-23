@@ -2,7 +2,9 @@
 
 @using ITEC245__ToDo_App_Final_Project__.Data;
 
-<h3>TaskDetails</h3>
+@inject NavigationManager NavigationManager
+
+<h3>Task Details</h3>
 
 @if (_Task != null)
 {
@@ -10,15 +12,14 @@
         <p><strong>Task ID:</strong> @_Task.TaskId</p>
         <p><strong>Task Name:</strong> @_Task.TaskName</p>
         <p><strong>Status:</strong> @_Task.Status</p>
-        <InputTextArea @bind-Value=_Task.TaskDescription>
-
-        </InputTextArea>
+        <p><strong>Task Details:</strong></p>
+        <p>@_Task.TaskDescription</p>
     </div>
     <div>
         <AuthorizeView Roles="Admin">
             <Authorized>
-                <button>Edit Details</button>
-                <button>Delete</button>
+                <button @onclick=EditDetails class="btn btn-danger">Edit Details</button>
+                <button @onclick=DeleteTask class="btn btn-danger">Delete</button>
             </Authorized>
         </AuthorizeView>
     </div>
@@ -40,5 +41,26 @@ else
         {
             _Task = context.Tasks.FirstOrDefault(t => t.TaskId == taskId);
         }
+    }
+
+    private void EditDetails()
+    {
+        NavigationManager.NavigateTo($"/TaskDetails/EditDetails/{taskId}", true);
+    }
+
+    private void DeleteTask()
+    {
+        using (var context = new ToDoAppDbContext())
+        {
+            Models.Task _Task = context.Tasks.FirstOrDefault(x => x.TaskId == taskId);
+
+            List<Models.TaskReport> reportsToDelete = context.TaskReports.Where(x => x.TaskID == taskId).ToList();
+            context.TaskReports.RemoveRange(reportsToDelete);
+
+            context.Tasks.Remove(_Task);
+            context.SaveChanges();
+        }
+
+        NavigationManager.NavigateTo("/AllTasks", true);
     }
 }
