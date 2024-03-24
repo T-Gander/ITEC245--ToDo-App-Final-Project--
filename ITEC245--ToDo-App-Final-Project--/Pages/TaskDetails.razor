@@ -18,7 +18,13 @@
         <p>@_Task.TaskDescription</p>
     </div>
     <div class="mb-5">
-        <button @onclick=AddReport class="btn btn-primary">Add Report</button>
+        @using(var context = new ToDoAppDbContext())
+        {
+            if (context.TaskTeams.Any(x => x.UserID == _UserID && x.TaskID == taskId))
+            {
+                <button @onclick=AddReport class="btn btn-primary me-1">Add Report</button>
+            }
+        }
         <AuthorizeView Roles="Admin">
             <Authorized>
                 <button @onclick=EditDetails class="btn btn-danger">Edit Details</button>
@@ -46,7 +52,8 @@ else
 
 @code {
     [Parameter]
-    public int taskId { get; set; }     @* Tag needed to retrieve from url *@
+    public int taskId { get; set; }
+    @* Tag needed to retrieve from url *@
 
     private Models.Task _Task;
 
