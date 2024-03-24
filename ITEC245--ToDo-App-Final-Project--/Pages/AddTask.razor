@@ -10,7 +10,7 @@
 
 <AuthorizeView Roles="Admin">
     <Authorized>
-    <h3>Add a Task</h3>
+        <h3><strong>Add a Task</strong></h3>
         <EditForm Model=@_NewTask OnValidSubmit="@CreateTask">
              <ChildContent Context="formContext">               @*This line took forever to figure out. Docs are awful.*@
                 <div class="row mt-1">

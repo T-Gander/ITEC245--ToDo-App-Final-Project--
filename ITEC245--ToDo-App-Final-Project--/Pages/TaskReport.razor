@@ -7,25 +7,30 @@
 
 @if (_Task != null)
 {
-<h3>Task Report for [@_Task.TaskName] [ID: @_Task.TaskId]</h3>
+    <h3><strong>Task Report for [@_Task.TaskName] [ID: @_Task.TaskId]</strong></h3>
 
-    <EditForm Model=@_NewReport OnValidSubmit="@CreateTaskReport">
+    <EditForm class="mb-4" Model=@_NewReport OnValidSubmit="@CreateTaskReport">
         <div>
             <p><strong>Status:</strong> @_Task.Status</p>   <!-- Make this a dropdown to change status? Or only update to in-progress? Only Admin can change to other options -->
             <p>@_Task.TaskDescription</p>
         </div>
-        <div class="row">
+        <div>
             <!-- Text box for report -->
-            <InputTextArea class="col-md-5 h-75" rows="4" name="TaskDetail" @bind-Value=_NewReport.Report></InputTextArea>
+            <InputTextArea class="col-md-5" rows="4" name="TaskDetail" @bind-Value=_NewReport.Report></InputTextArea>
         </div>
-        <button class="btn btn-danger" type="submit">Submit</button>
+        <div class="row">
+            <label class="col-md-2"><strong>Complete?</strong></label>
+            <input class="col-md-2" type="checkbox" @bind-value=_CompleteTask />
+        </div>
+        <button class="btn btn-primary mt-2" type="submit">Submit</button>
     </EditForm>
     
+    <h4><strong>Task Reports:</strong></h4>
 
     @foreach(var report in _PreviousReports)
     {
-        <div class="row">
-            <div class="col-md-4">
+        <div class="row border border-primary">
+            <div class="col-md-4 mt-3">
                 <p><strong>Report ID: </strong>@report.ReportId</p>   <!-- Make this a dropdown to change status? Or only update to in-progress? Only Admin can change to other options -->
                 <p>@report.Report</p>
             </div>
@@ -52,6 +57,8 @@ else
 
     private Models.User _User;
 
+    private bool _CompleteTask = false;
+
     protected override void OnInitialized()
     {
         using (var context = new ToDoAppDbContext())
@@ -74,7 +81,12 @@ else
 
             using (var context = new ToDoAppDbContext())
             {
-                context.Tasks.FirstOrDefault(x => x.TaskId == _Task.TaskId).Status = Models.Task.TaskProgress.InProgress;
+                if (_CompleteTask)
+                {
+                    context.Tasks.FirstOrDefault(x => x.TaskId == _Task.TaskId).Status = Models.Task.TaskProgress.Complete;
+                }
+                else
+                    context.Tasks.FirstOrDefault(x => x.TaskId == _Task.TaskId).Status = Models.Task.TaskProgress.InProgress;
 
                 context.TaskReports.Add(_NewReport);
 

@@ -1,10 +1,12 @@
 ﻿@page "/TaskDetails/{taskId:int}"       //Using routing parameters
 
 @using ITEC245__ToDo_App_Final_Project__.Data;
+@using System.Security.Claims
 
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 
-<h3>Task Details</h3>
+<h3><strong>Task Details</strong></h3>
 
 @if (_Task != null)
 {
@@ -15,7 +17,8 @@
         <p><strong>Task Details:</strong></p>
         <p>@_Task.TaskDescription</p>
     </div>
-    <div>
+    <div class="mb-5">
+        <button @onclick=AddReport class="btn btn-primary">Add Report</button>
         <AuthorizeView Roles="Admin">
             <Authorized>
                 <button @onclick=EditDetails class="btn btn-danger">Edit Details</button>
@@ -23,6 +26,18 @@
             </Authorized>
         </AuthorizeView>
     </div>
+
+    <h4><strong>Task Reports:</strong></h4>
+
+    @foreach (var report in _PreviousReports)
+    {
+        <div class="row border border-primary">
+            <div class="col-md-4 mt-3">
+                <p><strong>Report ID: </strong>@report.ReportId</p>   <!-- Make this a dropdown to change status? Or only update to in-progress? Only Admin can change to other options -->
+                <p>@report.Report</p>
+            </div>
+        </div>
+    }
 }
 else
 {
@@ -35,17 +50,34 @@ else
 
     private Models.Task _Task;
 
-    protected override void OnInitialized()
+    private ClaimsPrincipal user;
+
+    List<Models.TaskReport> _PreviousReports;
+
+    private int _UserID;
+
+    protected override async void OnInitialized()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+
         using(var context = new ToDoAppDbContext())
         {
+            _UserID = context.Users.FirstOrDefault(x => x.Email == user.Identity.Name).Id;
             _Task = context.Tasks.FirstOrDefault(t => t.TaskId == taskId);
+            _PreviousReports = context.TaskReports.Where(x => x.TaskID == taskId).ToList();
+            _PreviousReports = _PreviousReports.OrderByDescending(x => x.ReportId).ToList();
         }
     }
 
     private void EditDetails()
     {
         NavigationManager.NavigateTo($"/TaskDetails/EditDetails/{taskId}", true);
+    }
+
+    private void AddReport()
+    {
+        NavigationManager.NavigateTo($"/TaskReport/{taskId}/{_UserID}");
     }
 
     private void DeleteTask()

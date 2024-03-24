@@ -1,9 +1,11 @@
 ﻿@page "/UnassignedTasks"
 @using ITEC245__ToDo_App_Final_Project__.Data;
+@using System.Security.Claims
 
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 
-<h3>Unassigned Tasks</h3>
+<h3<strong>Unassigned Tasks</strong></h3>
 
 <table class="table">
     <!-- Boilerplate taken from bootstrap docs -->
@@ -26,6 +28,7 @@
                 <td>@task.Status</td>
                 <td>
                     <button class="btn btn-primary" @onclick="() => ViewDetails(task.TaskId)">View Details</button>
+                    <button class="btn btn-primary" @onclick="() => AssignToMe(task.TaskId)">Assign to Me</button>
                 </td>
             </tr>
         }
@@ -35,13 +38,35 @@
 @code {
     private List<Models.Task> Tasks;
 
-    protected override void OnInitialized()
+    private ClaimsPrincipal user;
+
+    private int _UserID;
+
+    protected override async void OnInitialized()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+
         using (var context = new ToDoAppDbContext())
         {
             Tasks = context.Tasks.ToList();
             Tasks.RemoveAll(x => x.Status != Models.Task.TaskProgress.Unassigned);
+            _UserID = context.Users.FirstOrDefault(x => x.Email == user.Identity.Name).Id;
         }
+    }
+
+    private void AssignToMe(int taskId)
+    {
+        using (var context = new ToDoAppDbContext())
+        {
+            Models.TaskTeam assignToMe = new Models.TaskTeam();
+            assignToMe.TaskID = taskId;
+            assignToMe.UserID = _UserID;
+            context.TaskTeams.Add(assignToMe);
+            context.Tasks.FirstOrDefault(x => x.TaskId == taskId).Status = Models.Task.TaskProgress.NoProgress;
+            context.SaveChanges();
+        }
+        NavigationManager.NavigateTo($"/MyTasks", true);
     }
 
     private void ViewDetails(int taskId)
