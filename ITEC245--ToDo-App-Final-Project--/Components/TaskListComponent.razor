@@ -10,6 +10,13 @@
     [Parameter]
     public int _UserID { get; set; }
 
+    [Parameter]
+    public bool _AssignToMe { get; set; }
+    [Parameter]
+    public bool _EditTask { get; set; }
+    [Parameter]
+    public bool _AddReport { get; set; }
+
     private void ViewDetails(int taskId)
     {
         NavigationManager.NavigateTo($"/TaskDetails/{taskId}");
@@ -18,6 +25,25 @@
     private void AddReport(int taskId)
     {
         NavigationManager.NavigateTo($"/TaskReport/{taskId}/{_UserID}");
+    }
+
+    private void AssignToMe(int taskId)
+    {
+        using (var context = new ToDoAppDbContext())
+        {
+            Models.TaskTeam assignToMe = new Models.TaskTeam();
+            assignToMe.TaskID = taskId;
+            assignToMe.UserID = _UserID;
+            context.TaskTeams.Add(assignToMe);
+            context.Tasks.FirstOrDefault(x => x.TaskId == taskId).Status = Models.Task.TaskProgress.NoProgress;
+            context.SaveChanges();
+        }
+        NavigationManager.NavigateTo($"/MyTasks", true);
+    }
+
+    private void EditTask(int taskId)
+    {
+        NavigationManager.NavigateTo($"/TaskDetails/EditDetails/{taskId}");
     }
 }
 
@@ -42,7 +68,22 @@
                 <td>@task.Status</td>
                 <td>
                     <button class="btn btn-primary" @onclick="() => ViewDetails(task.TaskId)">View Details</button>
-                    <button class="btn btn-primary" @onclick="() => AddReport(task.TaskId)">Add Report</button>
+                    @if (_AddReport)
+                    {
+                        <button class="btn btn-primary ms-2" @onclick="() => AddReport(task.TaskId)">Add Report</button>
+                    }
+                    @if (_AssignToMe)
+                    {
+                        <button class="btn btn-primary ms-2" @onclick="() => AssignToMe(task.TaskId)">Assign to Me</button>
+                    }
+                    @if (_EditTask)
+                    {
+                        <AuthorizeView Roles="Admin">
+                            <Authorized>
+                                <button class="btn btn-danger ms-2" @onclick="() => EditTask(task.TaskId)">Edit Task</button>
+                            </Authorized>
+                        </AuthorizeView>
+                    }
                 </td>
             </tr>
         }

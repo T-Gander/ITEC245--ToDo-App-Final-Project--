@@ -1,39 +1,12 @@
 ﻿@page "/UnassignedTasks"
 @using ITEC245__ToDo_App_Final_Project__.Data;
 @using System.Security.Claims
+@using ITEC245__ToDo_App_Final_Project__.Components;
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject NavigationManager NavigationManager
 
-<h3<strong>Unassigned Tasks</strong></h3>
-
-<table class="table">
-    <!-- Boilerplate taken from bootstrap docs -->
-    <thead>
-        <tr>
-            <th scope="col">Task ID</th>
-            <th scope="col">Task Name</th>
-            <th scope="col">Status</th>
-            <th scope="col">Options</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Would like to add sorting, will need c# methods in code section -->
-
-        @foreach (var task in Tasks)
-        {
-            <tr>
-                <th scope="row">@task.TaskId</th>
-                <td>@task.TaskName</td>
-                <td>@task.Status</td>
-                <td>
-                    <button class="btn btn-primary" @onclick="() => ViewDetails(task.TaskId)">View Details</button>
-                    <button class="btn btn-primary" @onclick="() => AssignToMe(task.TaskId)">Assign to Me</button>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<h3><strong>Unassigned Tasks</strong></h3>
+<TaskListComponent _AssignToMe=true _Tasks="Tasks" _UserID="_UserID"/>
 
 @code {
     private List<Models.Task> Tasks;
@@ -53,29 +26,5 @@
             Tasks.RemoveAll(x => x.Status != Models.Task.TaskProgress.Unassigned);
             _UserID = context.Users.FirstOrDefault(x => x.Email == user.Identity.Name).Id;
         }
-    }
-
-    private void AssignToMe(int taskId)
-    {
-        using (var context = new ToDoAppDbContext())
-        {
-            Models.TaskTeam assignToMe = new Models.TaskTeam();
-            assignToMe.TaskID = taskId;
-            assignToMe.UserID = _UserID;
-            context.TaskTeams.Add(assignToMe);
-            context.Tasks.FirstOrDefault(x => x.TaskId == taskId).Status = Models.Task.TaskProgress.NoProgress;
-            context.SaveChanges();
-        }
-        NavigationManager.NavigateTo($"/MyTasks", true);
-    }
-
-    private void ViewDetails(int taskId)
-    {
-        NavigationManager.NavigateTo($"/TaskDetails/{taskId}");
-    }
-
-    private void AddTask()
-    {
-        NavigationManager.NavigateTo("/AddTask", true);
     }
 }

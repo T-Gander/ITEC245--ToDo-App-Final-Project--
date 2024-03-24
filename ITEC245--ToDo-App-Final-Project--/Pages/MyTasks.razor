@@ -7,7 +7,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
 <h3><strong>My Tasks</strong></h3>
-<TaskListComponent _Tasks="MyTasksList" _UserID="_UserID"/>
+<TaskListComponent _AddReport=true _Tasks="MyTasksList" _UserID="_UserID"/>
 
 @code {
     List<Models.Task> MyTasksList = new List<Models.Task>();
