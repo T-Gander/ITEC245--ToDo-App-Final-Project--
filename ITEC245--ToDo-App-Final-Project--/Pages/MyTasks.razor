@@ -67,7 +67,7 @@
         {
             _UserID = context.Users.FirstOrDefault(x => x.Email == user.Identity.Name).Id;
 
-            MyTasksList = context.TaskTeams.Where(x => x.UserID == _UserID).Select(x => x.Task).ToList();
+            MyTasksList = context.TaskTeams.Where(x => x.UserID == _UserID).Select(x => x.Task).OrderBy(x => x.Status).ThenBy(x => x.TaskId).ToList();
         }
     }
 
