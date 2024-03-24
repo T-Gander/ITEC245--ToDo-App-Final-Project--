@@ -2,41 +2,12 @@
 
 @using ITEC245__ToDo_App_Final_Project__.Data;
 @using System.Security.Claims
+@using ITEC245__ToDo_App_Final_Project__.Components;
 
 @inject AuthenticationStateProvider AuthenticationStateProvider
-@inject NavigationManager NavigationManager
 
 <h3><strong>My Tasks</strong></h3>
-
-<table class="table">
-    <!-- Boilerplate taken from bootstrap docs -->
-    <thead>
-        <tr>
-            <th scope="col">Task ID</th>
-            <th scope="col">Task Name</th>
-            <th scope="col">Status</th>
-            <th scope="col">Options</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Would like to add sorting, will need c# methods in code section -->
-
-        <!--Use a component here that uses a list as a parameter-->
-
-        @foreach (var task in MyTasksList)
-        {
-            <tr>
-                <th scope="row">@task.TaskId</th>
-                <td>@task.TaskName</td>
-                <td>@task.Status</td>
-                <td>
-                    <button class="btn btn-primary" @onclick="() => ViewDetails(task.TaskId)">View Details</button>
-                    <button class="btn btn-primary" @onclick="() => AddReport(task.TaskId)">Add Report</button>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<TaskListComponent _Tasks="MyTasksList" _UserID="_UserID"/>
 
 @code {
     List<Models.Task> MyTasksList = new List<Models.Task>();
@@ -56,15 +27,5 @@
 
             MyTasksList = context.TaskTeams.Where(x => x.UserID == _UserID).Select(x => x.Task).OrderBy(x => x.Status).ThenBy(x => x.TaskId).ToList();
         }
-    }
-
-    private void ViewDetails(int taskId)
-    {
-        NavigationManager.NavigateTo($"/TaskDetails/{taskId}");
-    }
-
-    private void AddReport(int taskId)
-    {
-        NavigationManager.NavigateTo($"/TaskReport/{taskId}/{_UserID}");
     }
 }
