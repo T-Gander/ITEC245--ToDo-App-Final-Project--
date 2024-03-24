@@ -7,6 +7,47 @@
 @inject Popups Popups
 @inject NavigationManager NavigationManager
 
+<h3><strong>Add a Task</strong></h3>
+<EditForm Model=@_NewTask OnValidSubmit="@CreateTask">
+    <ChildContent Context="formContext">
+        @*This line took forever to figure out. Docs are awful.*@
+        <div class="row mt-1">
+            <label class="col-md-2">Task Name:</label>
+            <input class="col-md-3" type="text" name="TaskName" @bind-value=_NewTask.TaskName />
+        </div>
+        <div class="row mt-1">
+            <label class="col-md-2">Task Detail:</label>
+            <InputTextArea class="col-md-3 h-75" rows="4" name="TaskDetail" @bind-Value=_NewTask.TaskDescription></InputTextArea>       @* Why is value capital here??? To get around regular tags? Annoying debug *@
+        </div>
+        <div class="row mt-1">
+            <label class="col-md-2">Selected Users:</label>
+            <label class="col-md-3">@allSelectedUsers</label>
+            <button class="col-md-2 btn btn-primary" type="button" @onclick="ClearUsers">Clear Selected Users</button>
+        </div>
+        <div class="row mt-1">
+            <label class="col-md-2">Assigned To:</label>
+            <select id="dropdown" class="col-md-3" @bind=_SelectedUserId>
+                <option value="">Select a User</option>
+                @foreach (User user in _Users)
+                {
+                    <option value="@user.Id">@user.FirstName @user.LastName</option>
+                }
+            </select>
+        </div>
+        <div class="row mt-1">
+            <span class="col-md-2"></span>
+            <button class="col-md-3 btn btn-primary" type="button" @onclick="AddAnotherUser">Add Selected User</button>
+
+        </div>
+
+        @*A way to add more users*@
+        <div class="row mt-3">
+            <span class="col-md-2"></span>
+            <button class="col-md-3 btn btn-danger" type="submit">Add Task</button>
+        </div>
+    </ChildContent>
+</EditForm>
+
 @code {
     public Models.Task _NewTask = new Models.Task();
 
@@ -109,44 +150,3 @@
     }
 
 }
-
-<h3><strong>Add a Task</strong></h3>
-<EditForm Model=@_NewTask OnValidSubmit="@CreateTask">
-    <ChildContent Context="formContext">
-        @*This line took forever to figure out. Docs are awful.*@
-        <div class="row mt-1">
-            <label class="col-md-2">Task Name:</label>
-            <input class="col-md-3" type="text" name="TaskName" @bind-value=_NewTask.TaskName />
-        </div>
-        <div class="row mt-1">
-            <label class="col-md-2">Task Detail:</label>
-            <InputTextArea class="col-md-3 h-75" rows="4" name="TaskDetail" @bind-Value=_NewTask.TaskDescription></InputTextArea>       @* Why is value capital here??? To get around regular tags? Annoying debug *@
-        </div>
-        <div class="row mt-1">
-            <label class="col-md-2">Selected Users:</label>
-            <label class="col-md-3">@allSelectedUsers</label>
-            <button class="col-md-2 btn btn-primary" type="button" @onclick="ClearUsers">Clear Selected Users</button>
-        </div>
-        <div class="row mt-1">
-            <label class="col-md-2">Assigned To:</label>
-            <select id="dropdown" class="col-md-3" @bind=_SelectedUserId>
-                <option value="">Select a User</option>
-                @foreach (User user in _Users)
-                {
-                    <option value="@user.Id">@user.FirstName @user.LastName</option>
-                }
-            </select>
-        </div>
-        <div class="row mt-1">
-            <span class="col-md-2"></span>
-            <button class="col-md-3 btn btn-primary" type="button" @onclick="AddAnotherUser">Add Selected User</button>
-
-        </div>
-
-        @*A way to add more users*@
-        <div class="row mt-3">
-            <span class="col-md-2"></span>
-            <button class="col-md-3 btn btn-danger" type="submit">Add Task</button>
-        </div>
-    </ChildContent>
-</EditForm>

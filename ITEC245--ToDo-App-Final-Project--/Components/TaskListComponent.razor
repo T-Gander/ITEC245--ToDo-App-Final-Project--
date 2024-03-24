@@ -4,49 +4,6 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject NavigationManager NavigationManager
 
-@code {
-    [Parameter]
-    public List<Models.Task> _Tasks { get; set; }
-    [Parameter]
-    public int _UserID { get; set; }
-
-    [Parameter]
-    public bool _AssignToMe { get; set; }
-    [Parameter]
-    public bool _EditTask { get; set; }
-    [Parameter]
-    public bool _AddReport { get; set; }
-
-    private void ViewDetails(int taskId)
-    {
-        NavigationManager.NavigateTo($"/TaskDetails/{taskId}");
-    }
-
-    private void AddReport(int taskId)
-    {
-        NavigationManager.NavigateTo($"/TaskReport/{taskId}/{_UserID}");
-    }
-
-    private void AssignToMe(int taskId)
-    {
-        using (var context = new ToDoAppDbContext())
-        {
-            Models.TaskTeam assignToMe = new Models.TaskTeam();
-            assignToMe.TaskID = taskId;
-            assignToMe.UserID = _UserID;
-            context.TaskTeams.Add(assignToMe);
-            context.Tasks.FirstOrDefault(x => x.TaskId == taskId).Status = Models.Task.TaskProgress.NoProgress;
-            context.SaveChanges();
-        }
-        NavigationManager.NavigateTo($"/MyTasks", true);
-    }
-
-    private void EditTask(int taskId)
-    {
-        NavigationManager.NavigateTo($"/TaskDetails/EditDetails/{taskId}");
-    }
-}
-
 <table class="table">
     <!-- Boilerplate taken from bootstrap docs -->
     <thead>
@@ -89,3 +46,46 @@
         }
     </tbody>
 </table>
+
+@code {
+    [Parameter]
+    public List<Models.Task> _Tasks { get; set; }
+    [Parameter]
+    public int _UserID { get; set; }
+
+    [Parameter]
+    public bool _AssignToMe { get; set; }
+    [Parameter]
+    public bool _EditTask { get; set; }
+    [Parameter]
+    public bool _AddReport { get; set; }
+
+    private void ViewDetails(int taskId)
+    {
+        NavigationManager.NavigateTo($"/TaskDetails/{taskId}");
+    }
+
+    private void AddReport(int taskId)
+    {
+        NavigationManager.NavigateTo($"/TaskReport/{taskId}/{_UserID}");
+    }
+
+    private void AssignToMe(int taskId)
+    {
+        using (var context = new ToDoAppDbContext())
+        {
+            Models.TaskTeam assignToMe = new Models.TaskTeam();
+            assignToMe.TaskID = taskId;
+            assignToMe.UserID = _UserID;
+            context.TaskTeams.Add(assignToMe);
+            context.Tasks.FirstOrDefault(x => x.TaskId == taskId).Status = Models.Task.TaskProgress.NoProgress;
+            context.SaveChanges();
+        }
+        NavigationManager.NavigateTo($"/MyTasks", true);
+    }
+
+    private void EditTask(int taskId)
+    {
+        NavigationManager.NavigateTo($"/TaskDetails/EditDetails/{taskId}");
+    }
+}
