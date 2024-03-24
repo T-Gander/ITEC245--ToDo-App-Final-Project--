@@ -9,6 +9,11 @@
     border-color: rebeccapurple;
 }
 
+.btn-primary:active {
+    background-color: rebeccapurple;
+    border-color: rebeccapurple;
+}
+
 .btn-danger {
     color: white;
     border-color: orangered;
