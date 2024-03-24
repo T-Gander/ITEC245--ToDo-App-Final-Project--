@@ -16,8 +16,15 @@
 
     Dictionary<string, int?> selectedUsers = new Dictionary<string, int?>();
 
-    [Parameter]
-    public List<User> _Users { get; set; }
+    public List<User> _Users;
+
+    protected override void OnInitialized()
+    {
+        using (var context = new ToDoAppDbContext())
+        {
+            _Users = context.Users.ToList();
+        }
+    }
 
     private async void CreateTask()
     {

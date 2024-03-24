@@ -8,14 +8,6 @@
 
 <h3><strong>My Tasks</strong></h3>
 
-@* Generate a list of tasks, generate taskteams assigned to logged in user. Make a new list of the matches and show them in table. *@
-
-@* <AuthorizeView Roles="Admin">
-    <Authorized>
-        <button class="btn btn-info" @onclick=AddTask>Add a Task</button>
-    </Authorized>
-</AuthorizeView> *@
-
 <table class="table">
     <!-- Boilerplate taken from bootstrap docs -->
     <thead>
@@ -40,11 +32,6 @@
                 <td>
                     <button class="btn btn-primary" @onclick="() => ViewDetails(task.TaskId)">View Details</button>
                     <button class="btn btn-primary" @onclick="() => AddReport(task.TaskId)">Add Report</button>
-                    <AuthorizeView Roles="Admin">
-                        <Authorized>
-                            <button @onclick="() => EditTask(task.TaskId)" class="btn btn-danger">Edit Details</button>
-                        </Authorized>
-                    </AuthorizeView>
                 </td>
             </tr>
         }
@@ -79,10 +66,5 @@
     private void AddReport(int taskId)
     {
         NavigationManager.NavigateTo($"/TaskReport/{taskId}/{_UserID}");
-    }
-
-    private void EditTask(int taskId)
-    {
-        NavigationManager.NavigateTo($"/TaskDetails/EditDetails/{taskId}");
     }
 }

@@ -6,7 +6,7 @@
 
 <AuthorizeView Roles="Admin">
     <Authorized>
-        <AddATaskComponent _Users="_Users"/>
+        <AddATaskComponent/>
     </Authorized>
     <NotAuthorized>
         <h3>You don't have authourization to use this page.</h3>
@@ -14,14 +14,5 @@
 </AuthorizeView>
 
 @code {
-    private List<User> _Users;
-
-    protected override void OnInitialized()
-    {
-        using (var context = new ToDoAppDbContext())
-        {
-            _Users = context.Users.ToList();
-        }        
-    }
     
 }
