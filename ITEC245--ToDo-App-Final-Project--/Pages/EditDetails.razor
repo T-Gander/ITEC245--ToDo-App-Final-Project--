@@ -38,7 +38,7 @@
                         <button class="col-md-2 btn btn-primary" type="button" @onclick="ClearUsers">Clear Selected Users</button>
                     </div>
                     <div class="row mt-1">
-                        <label class="col-md-2">Assigned To:</label>
+                        <label class="col-md-2">Users:</label>
                         <select id="dropdown" class="col-md-3" @bind=_SelectedUserId>
                             <option value="">Select a User</option>
                             @foreach (User user in _Users)
@@ -87,6 +87,8 @@
 
     private List<User> _Users;
 
+    private List<User> _AssignedUsers;
+
     Dictionary<string, int?> selectedUsers = new Dictionary<string, int?>();
 
     protected override void OnInitialized()
@@ -97,6 +99,32 @@
         {
             _Users = context.Users.ToList();
             _Task = context.Tasks.FirstOrDefault(t => t.TaskId == taskId);
+            _AssignedUsers = context.TaskTeams.Where(x => x.TaskID == taskId).Select(x => x.User).ToList();
+
+            for (int i = 0; i < _AssignedUsers.Count; i++)
+            {
+                if (_AssignedUsers.Count == 1)
+                {
+                    allSelectedUsers = $"{_AssignedUsers[i].FirstName} {_AssignedUsers[i].LastName}";
+                    selectedUsers.Add($"{_AssignedUsers[i].FirstName} {_AssignedUsers[i].LastName}",_AssignedUsers[i].Id);
+                    _Users.Remove(_AssignedUsers[i]);
+                }
+                else
+                {
+                    if (i == _AssignedUsers.Count - 1)
+                    {
+                        allSelectedUsers += $"{_AssignedUsers[i].FirstName} {_AssignedUsers[i].LastName}";
+                        selectedUsers.Add($"{_AssignedUsers[i].FirstName} {_AssignedUsers[i].LastName}", _AssignedUsers[i].Id);
+                        _Users.Remove(_AssignedUsers[i]);
+                    }
+                    else
+                    {
+                        allSelectedUsers += $"{_AssignedUsers[i].FirstName} {_AssignedUsers[i].LastName}, ";
+                        selectedUsers.Add($"{_AssignedUsers[i].FirstName} {_AssignedUsers[i].LastName}", _AssignedUsers[i].Id);
+                        _Users.Remove(_AssignedUsers[i]);
+                    }
+                }
+            }
         }
         _ProgressTypes.AddRange((Models.Task.TaskProgress[])Enum.GetValues(typeof(Models.Task.TaskProgress)));      //Kinda gross syntax, but adds all of the types contained in TaskProgress to a list.
     }

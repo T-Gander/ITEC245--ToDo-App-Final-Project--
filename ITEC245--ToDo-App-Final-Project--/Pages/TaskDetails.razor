@@ -14,6 +14,7 @@
         <p><strong>Task ID:</strong> @_Task.TaskId</p>
         <p><strong>Task Name:</strong> @_Task.TaskName</p>
         <p><strong>Status:</strong> @_Task.Status</p>
+        <p><strong>Assigned To:</strong> @_AssignedUsersString</p>
         <p><strong>Task Details:</strong></p>
         <p>@_Task.TaskDescription</p>
     </div>
@@ -58,6 +59,10 @@ else
 
     private Models.Task _Task;
 
+    private List<Models.User> _AssignedUsers = new List<Models.User>();
+
+    private string _AssignedUsersString = "";
+
     private ClaimsPrincipal user;
 
     List<Models.TaskReport> _PreviousReports;
@@ -75,6 +80,26 @@ else
             _Task = context.Tasks.FirstOrDefault(t => t.TaskId == taskId);
             _PreviousReports = context.TaskReports.Where(x => x.TaskID == taskId).ToList();
             _PreviousReports = _PreviousReports.OrderByDescending(x => x.ReportId).ToList();
+            _AssignedUsers = context.TaskTeams.Where(x => x.TaskID == taskId).Select(x => x.User).ToList();
+
+            for(int i = 0; i < _AssignedUsers.Count; i++)
+            {
+                if(_AssignedUsers.Count == 1)
+                {
+                    _AssignedUsersString = $"{_AssignedUsers[i].FirstName} {_AssignedUsers[i].LastName}";
+                }
+                else
+                {
+                    if(i == _AssignedUsers.Count - 1)
+                    {
+                        _AssignedUsersString += $"{_AssignedUsers[i].FirstName} {_AssignedUsers[i].LastName}";
+                    }
+                    else
+                    {
+                        _AssignedUsersString += $"{_AssignedUsers[i].FirstName} {_AssignedUsers[i].LastName}, ";
+                    }
+                }
+            }
         }
     }
 
