@@ -20,7 +20,7 @@
     <div class="mb-5">
         @using(var context = new ToDoAppDbContext())
         {
-            if (context.TaskTeams.Any(x => x.UserID == _UserID && x.TaskID == taskId))
+            if (context.TaskTeams.Any(x => x.UserID == _UserID && x.TaskID == taskId) && _Task.Status != Models.Task.TaskProgress.Complete)
             {
                 <button @onclick=AddReport class="btn btn-primary me-1">Add Report</button>
             }
@@ -41,6 +41,7 @@
             <div class="col-md-4 mt-3">
                 <p><strong>Report ID: </strong>@report.ReportId</p>   <!-- Make this a dropdown to change status? Or only update to in-progress? Only Admin can change to other options -->
                 <p>@report.Report</p>
+                <p><strong>Report By: </strong>@report.Reporter</p>
             </div>
         </div>
     }

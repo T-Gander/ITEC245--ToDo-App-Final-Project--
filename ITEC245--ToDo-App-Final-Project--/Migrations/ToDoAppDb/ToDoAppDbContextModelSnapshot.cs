@@ -3,19 +3,16 @@ using ITEC245__ToDo_App_Final_Project__.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ITEC245__ToDo_App_Final_Project__.Migrations
+namespace ITEC245__ToDo_App_Final_Project__.Migrations.ToDoAppDb
 {
     [DbContext(typeof(ToDoAppDbContext))]
-    [Migration("20240323175602_InitialDataTables")]
-    partial class InitialDataTables
+    partial class ToDoAppDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,6 +54,10 @@ namespace ITEC245__ToDo_App_Final_Project__.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReportId"));
 
                     b.Property<string>("Report")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Reporter")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

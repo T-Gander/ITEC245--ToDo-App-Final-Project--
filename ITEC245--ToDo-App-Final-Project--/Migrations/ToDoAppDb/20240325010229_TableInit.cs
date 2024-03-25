@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace ITEC245__ToDo_App_Final_Project__.Migrations
+namespace ITEC245__ToDo_App_Final_Project__.Migrations.ToDoAppDb
 {
     /// <inheritdoc />
-    public partial class InitialDataTables : Migration
+    public partial class TableInit : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,7 +48,8 @@ namespace ITEC245__ToDo_App_Final_Project__.Migrations
                     ReportId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TaskID = table.Column<int>(type: "int", nullable: false),
-                    Report = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Report = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Reporter = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {

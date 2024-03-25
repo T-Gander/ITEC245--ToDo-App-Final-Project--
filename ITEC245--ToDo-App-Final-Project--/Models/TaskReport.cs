@@ -17,6 +17,9 @@ namespace ITEC245__ToDo_App_Final_Project__.Models
         [Required]
         public string Report { get; set; }
 
+        [Required]
+        public string Reporter { get; set; }
+
         public Task Task { get; set; }
     }
     

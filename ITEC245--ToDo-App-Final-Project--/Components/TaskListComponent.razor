@@ -25,11 +25,11 @@
                 <td>@task.Status</td>
                 <td>
                     <button class="btn btn-primary" @onclick="() => ViewDetails(task.TaskId)">View Details</button>
-                    @if (_AddReport)
+                    @if (_AddReport && task.Status != Models.Task.TaskProgress.Complete)
                     {
                         <button class="btn btn-primary ms-2" @onclick="() => AddReport(task.TaskId)">Add Report</button>
                     }
-                    @if (_AssignToMe)
+                    @if (_AssignToMe && task.Status != Models.Task.TaskProgress.Complete)
                     {
                         <button class="btn btn-primary ms-2" @onclick="() => AssignToMe(task.TaskId)">Assign to Me</button>
                     }

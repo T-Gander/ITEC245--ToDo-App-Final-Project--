@@ -33,13 +33,14 @@
             <div class="col-md-4 mt-3">
                 <p><strong>Report ID: </strong>@report.ReportId</p>   <!-- Make this a dropdown to change status? Or only update to in-progress? Only Admin can change to other options -->
                 <p>@report.Report</p>
+                <p><strong>Report By: </strong>@report.Reporter</p>
             </div>
         </div>
     }
 }
 else
 {
-    <p>Task not found.</p>
+    <p>Task not found, or is already complete.</p>
 }
 
 @code {
@@ -88,6 +89,8 @@ else
                 else
                     context.Tasks.FirstOrDefault(x => x.TaskId == _Task.TaskId).Status = Models.Task.TaskProgress.InProgress;
 
+
+                _NewReport.Reporter = $"{_User.FirstName} {_User.LastName}";
                 context.TaskReports.Add(_NewReport);
 
                 await context.SaveChangesAsync();

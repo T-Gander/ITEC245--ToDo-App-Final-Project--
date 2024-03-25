@@ -47,6 +47,22 @@ namespace ITEC245__ToDo_App_Final_Project__.Areas.Identity.Pages.Account
             _emailSender = emailSender;
         }
 
+        public class IsAdminValidation : ValidationAttribute
+        {
+            protected override ValidationResult IsValid(object value, ValidationContext validationContext)      //Code boilerplate taken from ChatGPT and edited to make a custom validation.
+            {
+                if (value != null)
+                {
+                    string isAdmin = value.ToString().ToLower();
+                    if (isAdmin != "superuser" && isAdmin != "")
+                    {
+                        return new ValidationResult("Only admin passphrase or blank is allowed for this field.");
+                    }
+                }
+                return ValidationResult.Success;
+            }
+        }
+
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
@@ -110,6 +126,7 @@ namespace ITEC245__ToDo_App_Final_Project__.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
+            [IsAdminValidation]
             [DataType(DataType.Password)]
             [Display(Name = "Require Admin?")]
             public string IsAdmin { get; set; }
